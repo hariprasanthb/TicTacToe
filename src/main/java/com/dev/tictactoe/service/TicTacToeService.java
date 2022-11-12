@@ -7,6 +7,6 @@ import com.dev.tictactoe.model.TicTacToeResponse;
 
 public interface TicTacToeService {
 
-	public TicTacToeResponse validateUserInput(List<TicTacToeInput> ticTacToeUserInput);
+	public TicTacToeResponse validateUserInput(List<TicTacToeInput> ticTacToeUserInputs);
 
 }

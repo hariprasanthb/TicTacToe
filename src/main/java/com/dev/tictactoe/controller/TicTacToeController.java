@@ -22,18 +22,18 @@ import com.dev.tictactoe.service.TicTacToeService;
 @RequestMapping(value = {EndPoint.TIC_TAC_TOE})
 public class TicTacToeController 
 {
-	
+
 	private static final Logger logger = LogManager.getLogger(TicTacToeController.class);
-	
+
 	@Autowired
 	TicTacToeService ticTacToeService;
-	
+
 	@PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
 	private ResponseEntity<Object> validateUserInput(
-			@RequestBody(required = true) LinkedList<TicTacToeInput> ticTacToeUserInput) 
+			@RequestBody(required = true) LinkedList<TicTacToeInput> ticTacToeUserInputs) 
 	{
 		logger.info("Requsting Tic Tac Toe user input validation starts");
-		TicTacToeResponse response = ticTacToeService.validateUserInput(ticTacToeUserInput);
+		TicTacToeResponse response = ticTacToeService.validateUserInput(ticTacToeUserInputs);
 		logger.info("Requsting Tic Tac Toe user input validation ends");
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}

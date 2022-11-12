@@ -48,6 +48,7 @@ java -jar target/tictacktoe-0.0.1.jar
 
 * X always goes first.
 * Players cannot play on a played position.
+* Win Status Check
 
 ### Tic Tac Toe Application Endpoint Details
 ```

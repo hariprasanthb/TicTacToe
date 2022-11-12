@@ -1,10 +1,14 @@
 package com.dev.tictactoe.service.impl;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -19,31 +23,142 @@ import com.dev.tictactoe.service.TicTacToeService;
 @Service
 public class TicTacToeServiceImpl implements TicTacToeService 
 {
+	private static final String NO_MATCH_FOUND = "No Match Found";
 	private static final Logger logger = LogManager.getLogger(TicTacToeServiceImpl.class);
 	
 	@Override
-	public TicTacToeResponse validateUserInput(List<TicTacToeInput> ticTacToeUserInput) {
+	public TicTacToeResponse validateUserInput(List<TicTacToeInput> ticTacToeUserInputs) {
 		TicTacToeResponse ticTacToeResponse = new TicTacToeResponse();
-		String message = "Tic Tac Toe Application executed successfully";
+		String message = StringUtils.EMPTY;
 		TicTacToeAppRunningStatus status = TicTacToeAppRunningStatus.SUCCESS;
 		
-		if (ticTacToeUserInput.get(0).getPlayer().equals(TicTacToePlayer.O)) {
+		Map<TicTacToePosition, List<TicTacToeInput>> ticTacToeInputByPosition = ticTacToeUserInputs.stream()
+				.collect(Collectors.groupingBy(TicTacToeInput::getPosition));
+		boolean isSamePositionFilled = ticTacToeInputByPosition.entrySet().stream().anyMatch(input -> input.getValue().size() > 1);
+		
+		String firstPlayerInput = ticTacToeUserInputs.get(0).getPlayer().toString();
+		if (firstPlayerInput.equals(TicTacToePlayer.O.toString())) {
 			logger.error("X always goes first");
 			message = "X always goes first";
 			status = TicTacToeAppRunningStatus.FAIL;
-		}
-		
-		Map<TicTacToePosition, List<TicTacToeInput>> ticTacToeInputByPosition = ticTacToeUserInput.stream()
-				.collect(Collectors.groupingBy(TicTacToeInput::getPosition));
-		boolean isSamePositionFilled = ticTacToeInputByPosition.entrySet().stream().anyMatch(input -> input.getValue().size() > 1);
-		if(isSamePositionFilled) {
+		} else if (isSamePositionFilled) {
 			logger.error("Players cannot play on a played position.");
 			message = "Players cannot play on a played position.";
 			status = TicTacToeAppRunningStatus.FAIL;
+		} else {
+			message = checkWinningStatus(ticTacToeUserInputs);
 		}
-		
+		logger.info("Match Status: {}" , message);
 		ticTacToeResponse.setMessage(message);
 		ticTacToeResponse.setStatus(status);
 		return ticTacToeResponse;
+	}
+
+	private String checkWinningStatus(List<TicTacToeInput> ticTacToeUserInputs) {
+		
+		Map<String, String> ticTacToeDefaultValueMap = new HashMap<>();
+		ticTacToeDefaultValueMap.put(TicTacToePosition.A1.toString(), TicTacToePosition.A1.toString());
+		ticTacToeDefaultValueMap.put(TicTacToePosition.A2.toString(), TicTacToePosition.A2.toString());
+		ticTacToeDefaultValueMap.put(TicTacToePosition.A3.toString(), TicTacToePosition.A3.toString());
+		ticTacToeDefaultValueMap.put(TicTacToePosition.B1.toString(), TicTacToePosition.B1.toString());
+		ticTacToeDefaultValueMap.put(TicTacToePosition.B2.toString(), TicTacToePosition.B2.toString());
+		ticTacToeDefaultValueMap.put(TicTacToePosition.B3.toString(), TicTacToePosition.B3.toString());
+		ticTacToeDefaultValueMap.put(TicTacToePosition.C1.toString(), TicTacToePosition.C1.toString());
+		ticTacToeDefaultValueMap.put(TicTacToePosition.C2.toString(), TicTacToePosition.C2.toString());
+		ticTacToeDefaultValueMap.put(TicTacToePosition.C3.toString(), TicTacToePosition.C3.toString());
+		
+		Map<String, String> ticTacToeUserInputMap = ticTacToeUserInputs.stream()
+				.collect(Collectors.toMap(ticTacToeUserInput -> ticTacToeUserInput.getPosition().toString(), 
+						ticTacToeUserInput -> ticTacToeUserInput.getPlayer().toString()));
+		
+		Map<String, String> ticTacToeFinalValueMap = new HashMap<>();
+		ticTacToeFinalValueMap.putAll(ticTacToeDefaultValueMap);
+		ticTacToeFinalValueMap.putAll(ticTacToeUserInputMap);
+		
+		List<String> matchStrings = new ArrayList<>();
+				
+		String horizontalMatchStringFromRowA = buidAndAddMatchStrings(ticTacToeUserInputMap, 
+				Arrays.asList(TicTacToePosition.A1.toString(), TicTacToePosition.A2.toString(),
+						TicTacToePosition.A3.toString()), matchStrings);
+		
+		if (!checkAllRowMatchedForPlayer(horizontalMatchStringFromRowA).equals(NO_MATCH_FOUND)) {
+			return checkAllRowMatchedForPlayer(horizontalMatchStringFromRowA);
+		}
+		
+		String horizontalMatchStringFromRowB = buidAndAddMatchStrings(ticTacToeUserInputMap, 
+				Arrays.asList(TicTacToePosition.B1.toString(), TicTacToePosition.B2.toString(),
+						TicTacToePosition.B3.toString()), matchStrings);
+		
+		if (!checkAllRowMatchedForPlayer(horizontalMatchStringFromRowB).equals(NO_MATCH_FOUND)) {
+			return checkAllRowMatchedForPlayer(horizontalMatchStringFromRowB);
+		}
+		
+		String horizontalMatchStringFromRowC = buidAndAddMatchStrings(ticTacToeUserInputMap, 
+				Arrays.asList(TicTacToePosition.C1.toString(), TicTacToePosition.C2.toString(),
+						TicTacToePosition.C3.toString()), matchStrings); 
+		if (!checkAllRowMatchedForPlayer(horizontalMatchStringFromRowC).equals(NO_MATCH_FOUND)) {
+			return checkAllRowMatchedForPlayer(horizontalMatchStringFromRowC);
+		}
+		
+		String verticalMatchStringFromRowA = buidAndAddMatchStrings(ticTacToeUserInputMap, 
+				Arrays.asList(TicTacToePosition.A1.toString(), TicTacToePosition.B1.toString(),
+						TicTacToePosition.C1.toString()), matchStrings);
+		if (!checkAllRowMatchedForPlayer(verticalMatchStringFromRowA).equals(NO_MATCH_FOUND)) {
+			return checkAllRowMatchedForPlayer(verticalMatchStringFromRowA);
+		}
+		
+		
+		String verticalMatchStringFromRowB = buidAndAddMatchStrings(ticTacToeUserInputMap, 
+				Arrays.asList(TicTacToePosition.A2.toString(), TicTacToePosition.B2.toString(),
+						TicTacToePosition.C2.toString()), matchStrings); 
+		if (!checkAllRowMatchedForPlayer(verticalMatchStringFromRowB).equals(NO_MATCH_FOUND)) {
+			return checkAllRowMatchedForPlayer(verticalMatchStringFromRowB);
+		}
+		
+		String verticalMatchStringFromRowC = buidAndAddMatchStrings(ticTacToeUserInputMap, 
+				Arrays.asList(TicTacToePosition.A3.toString(), TicTacToePosition.B3.toString(),
+						TicTacToePosition.C3.toString()), matchStrings); 
+		if (!checkAllRowMatchedForPlayer(verticalMatchStringFromRowC).equals(NO_MATCH_FOUND)) {
+			return checkAllRowMatchedForPlayer(verticalMatchStringFromRowC);
+		}
+		
+		String diagonalMatchStringFromLeftCorner = buidAndAddMatchStrings(ticTacToeUserInputMap, 
+				Arrays.asList(TicTacToePosition.A1.toString(), TicTacToePosition.B2.toString(),
+						TicTacToePosition.C3.toString()), matchStrings); 
+		if (!checkAllRowMatchedForPlayer(diagonalMatchStringFromLeftCorner).equals(NO_MATCH_FOUND)) {
+			return checkAllRowMatchedForPlayer(diagonalMatchStringFromLeftCorner);
+		}
+		
+		String diagonalMatchStringFromRightCorner = buidAndAddMatchStrings(ticTacToeUserInputMap, 
+				Arrays.asList(TicTacToePosition.A3.toString(), TicTacToePosition.B2.toString(),
+						TicTacToePosition.C1.toString()), matchStrings); 
+		if (!checkAllRowMatchedForPlayer(diagonalMatchStringFromRightCorner).equals(NO_MATCH_FOUND)) {
+			return checkAllRowMatchedForPlayer(diagonalMatchStringFromRightCorner);
+		}
+		
+		return "Match Drawn";
+	}
+
+	private String checkAllRowMatchedForPlayer(String stringToCheck) {
+		
+		String status = StringUtils.EMPTY;
+		
+        if (stringToCheck.equals("XXX")) {
+        	status = "X Won";
+        } else if (stringToCheck.equals("OOO")) {
+        	status = "O Won";
+        } else {
+        	status = NO_MATCH_FOUND;
+        }
+        
+        return status;
+	}
+
+	private String buidAndAddMatchStrings(Map<String, String> ticTacToeUserInputMap, List<String> inputs, List<String> matchStrings) {
+		StringBuilder matchStringBuilder = new StringBuilder();
+		inputs.forEach(input -> matchStringBuilder.append(ticTacToeUserInputMap.get(input)));
+		matchStrings.add(matchStringBuilder.toString());
+		return matchStringBuilder.toString();
+		
 	}
 }

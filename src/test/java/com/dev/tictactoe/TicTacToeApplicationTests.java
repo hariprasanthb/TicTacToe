@@ -1,6 +1,7 @@
 package com.dev.tictactoe;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +12,6 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -53,5 +53,35 @@ class TicTacToeApplicationTests {
     	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.A1, TicTacToePlayer.O));
     	TicTacToeResponse response = ticTacToeService.validateUserInput(ticTacToeInputs);
     	assertEquals(response.getStatus(), TicTacToeAppRunningStatus.FAIL);
+    }
+    
+    @Test
+    @Order(3)
+    void caseC_winStatus() {
+    	List<TicTacToeInput> ticTacToeInputs = new ArrayList<>();
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.A1, TicTacToePlayer.X));
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.B1, TicTacToePlayer.O));
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.A2, TicTacToePlayer.X));
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.B2, TicTacToePlayer.O));
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.A3, TicTacToePlayer.X));
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.B3, TicTacToePlayer.O));
+    	TicTacToeResponse response = ticTacToeService.validateUserInput(ticTacToeInputs);
+    	assertTrue(response.getMessage().contains("Won"));
+    	assertEquals(response.getStatus(), TicTacToeAppRunningStatus.SUCCESS);
+    }
+    
+    @Test
+    @Order(4)
+    void caseD_DrawStatus() {
+    	List<TicTacToeInput> ticTacToeInputs = new ArrayList<>();
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.A1, TicTacToePlayer.X));
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.B1, TicTacToePlayer.O));
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.A3, TicTacToePlayer.X));
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.A2, TicTacToePlayer.O));
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.B2, TicTacToePlayer.X));
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.B3, TicTacToePlayer.O));
+    	TicTacToeResponse response = ticTacToeService.validateUserInput(ticTacToeInputs);
+    	assertTrue(response.getMessage().contains("Draw"));
+    	assertEquals(response.getStatus(), TicTacToeAppRunningStatus.SUCCESS);
     }
 }
