@@ -2,8 +2,8 @@
 
 ### Pre-conditions
 
-* System should be available with Java version 11 and Maven
-* System should be installed with lombok jar
+* System should be available with Java version 1.8 or higher and Maven packages
+* For eclipse users, need to install lombok jar
 
     * ![lombok_jar_installation_001](lombok_jar_installation_001.PNG)
 
