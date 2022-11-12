@@ -47,6 +47,7 @@ java -jar target/tictacktoe-0.0.1.jar
 ### Tic Tac Toe Test cases covered
 
 * X always goes first.
+* Players cannot play on a played position.
 
 ### Tic Tac Toe Application Endpoint Details
 ```
