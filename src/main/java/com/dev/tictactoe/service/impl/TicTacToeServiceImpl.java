@@ -75,63 +75,61 @@ public class TicTacToeServiceImpl implements TicTacToeService
 		ticTacToeFinalValueMap.putAll(ticTacToeDefaultValueMap);
 		ticTacToeFinalValueMap.putAll(ticTacToeUserInputMap);
 		
-		List<String> matchStrings = new ArrayList<>();
-				
-		String horizontalMatchStringFromRowA = buidAndAddMatchStrings(ticTacToeUserInputMap, 
+		String horizontalMatchStringFromRowA = buidMatchStrings(ticTacToeUserInputMap, 
 				Arrays.asList(TicTacToePosition.A1.toString(), TicTacToePosition.A2.toString(),
-						TicTacToePosition.A3.toString()), matchStrings);
+						TicTacToePosition.A3.toString()));
 		
 		if (!checkAllRowMatchedForPlayer(horizontalMatchStringFromRowA).equals(NO_MATCH_FOUND)) {
 			return checkAllRowMatchedForPlayer(horizontalMatchStringFromRowA);
 		}
 		
-		String horizontalMatchStringFromRowB = buidAndAddMatchStrings(ticTacToeUserInputMap, 
+		String horizontalMatchStringFromRowB = buidMatchStrings(ticTacToeUserInputMap, 
 				Arrays.asList(TicTacToePosition.B1.toString(), TicTacToePosition.B2.toString(),
-						TicTacToePosition.B3.toString()), matchStrings);
+						TicTacToePosition.B3.toString()));
 		
 		if (!checkAllRowMatchedForPlayer(horizontalMatchStringFromRowB).equals(NO_MATCH_FOUND)) {
 			return checkAllRowMatchedForPlayer(horizontalMatchStringFromRowB);
 		}
 		
-		String horizontalMatchStringFromRowC = buidAndAddMatchStrings(ticTacToeUserInputMap, 
+		String horizontalMatchStringFromRowC = buidMatchStrings(ticTacToeUserInputMap, 
 				Arrays.asList(TicTacToePosition.C1.toString(), TicTacToePosition.C2.toString(),
-						TicTacToePosition.C3.toString()), matchStrings); 
+						TicTacToePosition.C3.toString())); 
 		if (!checkAllRowMatchedForPlayer(horizontalMatchStringFromRowC).equals(NO_MATCH_FOUND)) {
 			return checkAllRowMatchedForPlayer(horizontalMatchStringFromRowC);
 		}
 		
-		String verticalMatchStringFromRowA = buidAndAddMatchStrings(ticTacToeUserInputMap, 
+		String verticalMatchStringFromRowA = buidMatchStrings(ticTacToeUserInputMap, 
 				Arrays.asList(TicTacToePosition.A1.toString(), TicTacToePosition.B1.toString(),
-						TicTacToePosition.C1.toString()), matchStrings);
+						TicTacToePosition.C1.toString()));
 		if (!checkAllRowMatchedForPlayer(verticalMatchStringFromRowA).equals(NO_MATCH_FOUND)) {
 			return checkAllRowMatchedForPlayer(verticalMatchStringFromRowA);
 		}
 		
 		
-		String verticalMatchStringFromRowB = buidAndAddMatchStrings(ticTacToeUserInputMap, 
+		String verticalMatchStringFromRowB = buidMatchStrings(ticTacToeUserInputMap, 
 				Arrays.asList(TicTacToePosition.A2.toString(), TicTacToePosition.B2.toString(),
-						TicTacToePosition.C2.toString()), matchStrings); 
+						TicTacToePosition.C2.toString())); 
 		if (!checkAllRowMatchedForPlayer(verticalMatchStringFromRowB).equals(NO_MATCH_FOUND)) {
 			return checkAllRowMatchedForPlayer(verticalMatchStringFromRowB);
 		}
 		
-		String verticalMatchStringFromRowC = buidAndAddMatchStrings(ticTacToeUserInputMap, 
+		String verticalMatchStringFromRowC = buidMatchStrings(ticTacToeUserInputMap, 
 				Arrays.asList(TicTacToePosition.A3.toString(), TicTacToePosition.B3.toString(),
-						TicTacToePosition.C3.toString()), matchStrings); 
+						TicTacToePosition.C3.toString())); 
 		if (!checkAllRowMatchedForPlayer(verticalMatchStringFromRowC).equals(NO_MATCH_FOUND)) {
 			return checkAllRowMatchedForPlayer(verticalMatchStringFromRowC);
 		}
 		
-		String diagonalMatchStringFromLeftCorner = buidAndAddMatchStrings(ticTacToeUserInputMap, 
+		String diagonalMatchStringFromLeftCorner = buidMatchStrings(ticTacToeUserInputMap, 
 				Arrays.asList(TicTacToePosition.A1.toString(), TicTacToePosition.B2.toString(),
-						TicTacToePosition.C3.toString()), matchStrings); 
+						TicTacToePosition.C3.toString())); 
 		if (!checkAllRowMatchedForPlayer(diagonalMatchStringFromLeftCorner).equals(NO_MATCH_FOUND)) {
 			return checkAllRowMatchedForPlayer(diagonalMatchStringFromLeftCorner);
 		}
 		
-		String diagonalMatchStringFromRightCorner = buidAndAddMatchStrings(ticTacToeUserInputMap, 
+		String diagonalMatchStringFromRightCorner = buidMatchStrings(ticTacToeUserInputMap, 
 				Arrays.asList(TicTacToePosition.A3.toString(), TicTacToePosition.B2.toString(),
-						TicTacToePosition.C1.toString()), matchStrings); 
+						TicTacToePosition.C1.toString())); 
 		if (!checkAllRowMatchedForPlayer(diagonalMatchStringFromRightCorner).equals(NO_MATCH_FOUND)) {
 			return checkAllRowMatchedForPlayer(diagonalMatchStringFromRightCorner);
 		}
@@ -154,10 +152,9 @@ public class TicTacToeServiceImpl implements TicTacToeService
         return status;
 	}
 
-	private String buidAndAddMatchStrings(Map<String, String> ticTacToeUserInputMap, List<String> inputs, List<String> matchStrings) {
+	private String buidMatchStrings(Map<String, String> ticTacToeUserInputMap, List<String> inputs) {
 		StringBuilder matchStringBuilder = new StringBuilder();
 		inputs.forEach(input -> matchStringBuilder.append(ticTacToeUserInputMap.get(input)));
-		matchStrings.add(matchStringBuilder.toString());
 		return matchStringBuilder.toString();
 		
 	}
