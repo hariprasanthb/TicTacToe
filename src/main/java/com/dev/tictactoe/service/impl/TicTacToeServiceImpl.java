@@ -45,7 +45,16 @@ public class TicTacToeServiceImpl implements TicTacToeService
 			message = "Players cannot play on a played position.";
 			status = TicTacToeAppRunningStatus.FAIL;
 		} else {
-			message = checkWinningStatus(ticTacToeUserInputs);
+			Long playerXCount = ticTacToeUserInputs.stream()
+					.filter(ticTacToeUserInput -> ticTacToeUserInput.getPlayer().toString().equals(TicTacToePlayer.X.toString()))
+					.count();
+			Long playerOCount = ticTacToeUserInputs.stream()
+					.filter(ticTacToeUserInput -> ticTacToeUserInput.getPlayer().toString().equals(TicTacToePlayer.O.toString()))
+					.count();
+			if (playerXCount >= 3 || playerOCount >= 3)
+				message = checkWinningStatus(ticTacToeUserInputs);
+			else 
+				message = "Match still going on";
 		}
 		logger.info("Match Status: {}" , message);
 		ticTacToeResponse.setMessage(message);
