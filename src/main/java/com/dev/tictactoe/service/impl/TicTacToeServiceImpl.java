@@ -1,7 +1,6 @@
 package com.dev.tictactoe.service.impl;
 
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -75,11 +74,13 @@ public class TicTacToeServiceImpl implements TicTacToeService
 		ticTacToeFinalValueMap.putAll(ticTacToeDefaultValueMap);
 		ticTacToeFinalValueMap.putAll(ticTacToeUserInputMap);
 		
+		boolean isAnyPlayerWon = false;
 		String horizontalMatchStringFromRowA = buidMatchStrings(ticTacToeUserInputMap, 
 				Arrays.asList(TicTacToePosition.A1.toString(), TicTacToePosition.A2.toString(),
 						TicTacToePosition.A3.toString()));
 		
 		if (!checkAllRowMatchedForPlayer(horizontalMatchStringFromRowA).equals(NO_MATCH_FOUND)) {
+			isAnyPlayerWon = true;
 			return checkAllRowMatchedForPlayer(horizontalMatchStringFromRowA);
 		}
 		
@@ -88,6 +89,7 @@ public class TicTacToeServiceImpl implements TicTacToeService
 						TicTacToePosition.B3.toString()));
 		
 		if (!checkAllRowMatchedForPlayer(horizontalMatchStringFromRowB).equals(NO_MATCH_FOUND)) {
+			isAnyPlayerWon = true;
 			return checkAllRowMatchedForPlayer(horizontalMatchStringFromRowB);
 		}
 		
@@ -95,6 +97,7 @@ public class TicTacToeServiceImpl implements TicTacToeService
 				Arrays.asList(TicTacToePosition.C1.toString(), TicTacToePosition.C2.toString(),
 						TicTacToePosition.C3.toString())); 
 		if (!checkAllRowMatchedForPlayer(horizontalMatchStringFromRowC).equals(NO_MATCH_FOUND)) {
+			isAnyPlayerWon = true;
 			return checkAllRowMatchedForPlayer(horizontalMatchStringFromRowC);
 		}
 		
@@ -102,6 +105,7 @@ public class TicTacToeServiceImpl implements TicTacToeService
 				Arrays.asList(TicTacToePosition.A1.toString(), TicTacToePosition.B1.toString(),
 						TicTacToePosition.C1.toString()));
 		if (!checkAllRowMatchedForPlayer(verticalMatchStringFromRowA).equals(NO_MATCH_FOUND)) {
+			isAnyPlayerWon = true;
 			return checkAllRowMatchedForPlayer(verticalMatchStringFromRowA);
 		}
 		
@@ -110,6 +114,7 @@ public class TicTacToeServiceImpl implements TicTacToeService
 				Arrays.asList(TicTacToePosition.A2.toString(), TicTacToePosition.B2.toString(),
 						TicTacToePosition.C2.toString())); 
 		if (!checkAllRowMatchedForPlayer(verticalMatchStringFromRowB).equals(NO_MATCH_FOUND)) {
+			isAnyPlayerWon = true;
 			return checkAllRowMatchedForPlayer(verticalMatchStringFromRowB);
 		}
 		
@@ -117,6 +122,7 @@ public class TicTacToeServiceImpl implements TicTacToeService
 				Arrays.asList(TicTacToePosition.A3.toString(), TicTacToePosition.B3.toString(),
 						TicTacToePosition.C3.toString())); 
 		if (!checkAllRowMatchedForPlayer(verticalMatchStringFromRowC).equals(NO_MATCH_FOUND)) {
+			isAnyPlayerWon = true;
 			return checkAllRowMatchedForPlayer(verticalMatchStringFromRowC);
 		}
 		
@@ -124,6 +130,7 @@ public class TicTacToeServiceImpl implements TicTacToeService
 				Arrays.asList(TicTacToePosition.A1.toString(), TicTacToePosition.B2.toString(),
 						TicTacToePosition.C3.toString())); 
 		if (!checkAllRowMatchedForPlayer(diagonalMatchStringFromLeftCorner).equals(NO_MATCH_FOUND)) {
+			isAnyPlayerWon = true;
 			return checkAllRowMatchedForPlayer(diagonalMatchStringFromLeftCorner);
 		}
 		
@@ -131,10 +138,15 @@ public class TicTacToeServiceImpl implements TicTacToeService
 				Arrays.asList(TicTacToePosition.A3.toString(), TicTacToePosition.B2.toString(),
 						TicTacToePosition.C1.toString())); 
 		if (!checkAllRowMatchedForPlayer(diagonalMatchStringFromRightCorner).equals(NO_MATCH_FOUND)) {
+			isAnyPlayerWon = true;
 			return checkAllRowMatchedForPlayer(diagonalMatchStringFromRightCorner);
 		}
 		
-		return "Match Drawn";
+		if (ticTacToeUserInputMap.size() >= 8 && !isAnyPlayerWon) {
+			return "Match Drawn";
+		}
+		
+		return "Match still going on";
 	}
 
 	private String checkAllRowMatchedForPlayer(String stringToCheck) {

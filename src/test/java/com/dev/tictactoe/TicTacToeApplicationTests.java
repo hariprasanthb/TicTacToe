@@ -74,14 +74,31 @@ class TicTacToeApplicationTests {
     @Order(4)
     void caseD_DrawStatus() {
     	List<TicTacToeInput> ticTacToeInputs = new ArrayList<>();
-    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.A1, TicTacToePlayer.X));
-    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.B1, TicTacToePlayer.O));
-    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.A3, TicTacToePlayer.X));
-    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.A2, TicTacToePlayer.O));
-    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.B2, TicTacToePlayer.X));
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.A2, TicTacToePlayer.X));
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.A1, TicTacToePlayer.O));
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.B1, TicTacToePlayer.X));
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.A3, TicTacToePlayer.O));
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.C1, TicTacToePlayer.X));
     	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.B3, TicTacToePlayer.O));
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.B2, TicTacToePlayer.X));
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.C2, TicTacToePlayer.O));
     	TicTacToeResponse response = ticTacToeService.validateUserInput(ticTacToeInputs);
     	assertTrue(response.getMessage().contains("Draw"));
     	assertEquals(response.getStatus(), TicTacToeAppRunningStatus.SUCCESS);
+    }
+    
+    @Test
+    @Order(5)
+    void caseD_matchOnGoingStatus() {
+    	List<TicTacToeInput> ticTacToeInputs = new ArrayList<>();
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.A2, TicTacToePlayer.X));
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.A1, TicTacToePlayer.O));
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.B1, TicTacToePlayer.X));
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.A3, TicTacToePlayer.O));
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.C1, TicTacToePlayer.X));
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.B3, TicTacToePlayer.O));
+    	ticTacToeInputs.add(new TicTacToeInput(TicTacToePosition.B2, TicTacToePlayer.X));
+    	TicTacToeResponse response = ticTacToeService.validateUserInput(ticTacToeInputs);
+    	assertTrue(response.getMessage().equals("Match still going on"));
     }
 }
